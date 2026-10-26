@@ -12,7 +12,7 @@
 
   // --- The "No" button runs away -------------------------------------------
   let lastDodge = 0;
-  let lastNoEvent = 0; // used to ignore ghost clicks that land on Yes after a No tap
+  let lastNoEvent = -Infinity; // used to ignore ghost clicks that land on Yes after a No tap
   function dodge(e) {
     if (e && e.cancelable) e.preventDefault();
     lastNoEvent = performance.now();
