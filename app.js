@@ -68,6 +68,30 @@
     if (noBtn.classList.contains("dodging")) dodge();
   });
 
+  // Touch screens have no hover, so the finger lands before we can react.
+  // React to any touch near the button and keep it wandering on its own.
+  if (matchMedia("(pointer: coarse)").matches) {
+    document.addEventListener("touchstart", (e) => {
+      if (!$("step-ask").classList.contains("active")) return;
+      // Yes sits right next to No; a tap on Yes must always go through.
+      if (e.target.closest("#yes")) return;
+      const t = e.touches[0];
+      const r = noBtn.getBoundingClientRect();
+      const near = 90;
+      if (
+        t.clientX > r.left - near && t.clientX < r.right + near &&
+        t.clientY > r.top - near && t.clientY < r.bottom + near
+      ) dodge(e);
+    }, { passive: false, capture: true });
+
+    const wander = setInterval(() => {
+      if (!$("step-ask").classList.contains("active")) return clearInterval(wander);
+      lastDodge = 0;
+      dodge();
+      lastNoEvent = -Infinity; // wandering alone must not block Yes
+    }, 1100);
+  }
+
   // --- Flow ----------------------------------------------------------------
   $("yes").addEventListener("click", () => {
     if (performance.now() - lastNoEvent < 500) return;
@@ -106,12 +130,41 @@
     burst();
   });
 
+  // Fallback for browsers where the async Clipboard API is missing or blocked.
+  function legacyCopy(text) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    ta.style.fontSize = "16px"; // stops iOS zooming in
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.setSelectionRange(0, text.length); // iOS ignores ta.select()
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch {}
+    ta.remove();
+    return ok;
+  }
+
   $("copy").addEventListener("click", async () => {
+    const text = message();
+    const status = $("copy-status");
+    // On phones, the share sheet lets her send it straight to you.
+    if (navigator.share) {
+      try {
+        await navigator.share({ text });
+        status.textContent = "Sent! 💌";
+        return;
+      } catch (err) {
+        if (err.name === "AbortError") return;
+      }
+    }
     try {
-      await navigator.clipboard.writeText(message());
-      $("copy-status").textContent = "Copied! Send it to me 😉";
+      await navigator.clipboard.writeText(text);
+      status.textContent = "Copied! Send it to me 😉";
     } catch {
-      $("copy-status").textContent = message();
+      status.textContent = legacyCopy(text) ? "Copied! Send it to me 😉" : text;
     }
   });
 
