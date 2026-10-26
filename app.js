@@ -11,8 +11,15 @@
   }
 
   // --- The "No" button runs away -------------------------------------------
+  let lastDodge = 0;
+  let lastNoEvent = 0; // used to ignore ghost clicks that land on Yes after a No tap
   function dodge(e) {
-    if (e) e.preventDefault();
+    if (e && e.cancelable) e.preventDefault();
+    lastNoEvent = performance.now();
+    // One tap fires several events (pointer, touch, mouse, click); move once.
+    const now = performance.now();
+    if (now - lastDodge < 60) return;
+    lastDodge = now;
     const margin = 8;
     const w = noBtn.offsetWidth;
     const h = noBtn.offsetHeight;
@@ -40,12 +47,11 @@
       noBtn.parentNode.insertBefore(ph, noBtn);
       noBtn.classList.add("dodging");
     }
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
+    noBtn.style.transform = `translate3d(${x}px, ${y}px, 0)`;
   }
 
   // Pointer covers mouse, touch and pen; focus covers keyboard users.
-  ["pointerenter", "pointerdown", "touchstart", "mousedown", "focus"].forEach((ev) =>
+  ["pointerenter", "pointerdown", "touchstart", "focus"].forEach((ev) =>
     noBtn.addEventListener(ev, dodge, { passive: false })
   );
   noBtn.addEventListener("click", dodge);
@@ -64,6 +70,7 @@
 
   // --- Flow ----------------------------------------------------------------
   $("yes").addEventListener("click", () => {
+    if (performance.now() - lastNoEvent < 500) return;
     noBtn.style.display = "none";
     show("step-activity");
   });
@@ -137,6 +144,8 @@
     layer.appendChild(el);
     el.addEventListener("animationend", () => el.remove());
   }
-  function burst() { for (let i = 0; i < 30; i++) setTimeout(heart, i * 60); }
-  setInterval(heart, 900);
+  function burst() { for (let i = 0; i < count; i++) setTimeout(heart, i * 80); }
+  const light = matchMedia("(pointer: coarse)").matches;
+  const count = light ? 12 : 30;
+  setInterval(() => { if (!document.hidden) heart(); }, light ? 1800 : 900);
 })();

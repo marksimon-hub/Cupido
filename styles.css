@@ -72,7 +72,10 @@ h2 { font-size: 1.5rem; margin: 0 0 20px; }
 .btn.no.dodging {
   position: fixed;
   z-index: 10;
-  transition: left 0.18s ease, top 0.18s ease;
+  left: 0;
+  top: 0;
+  will-change: transform;
+  transition: transform 0.18s ease;
 }
 .btn.no:hover,
 .btn.no:active,
