@@ -1,0 +1,14 @@
+# ⚠️  Claude Code does NOT read this file. It has no effect.
+#     Real protection lives in .claude/settings.json → permissions.deny
+#     (and sandbox.filesystem.denyRead for shell commands).
+#     Kept only as human-readable documentation of what is off-limits.
+#     Keep this list in sync with settings.json.
+.env
+.env.*
+secrets/
+credentials/
+*.pem
+*.key
+*.p12
+*.tfstate
+*.tfvars

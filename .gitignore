@@ -1,0 +1,61 @@
+# ============================================================
+# 1. SECRETS & CREDENTIALS — never commit these
+# ============================================================
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+id_rsa*
+id_ed25519*
+*.ppk
+secrets/
+credentials/
+*credentials*.json
+service-account*.json
+gcp-key*.json
+.aws/
+.npmrc
+.pypirc
+.netrc
+*.tfstate
+*.tfstate.*
+*.tfvars
+!example.tfvars
+.terraform/
+
+# ============================================================
+# 2. AI-ASSISTANT PERSONAL FILES (team files stay committed)
+# ============================================================
+.claude/settings.local.json
+CLAUDE.local.md
+.claude/.cc-writes/
+
+# ============================================================
+# 3. DEPENDENCIES & BUILD OUTPUT (delete what you don't use)
+# ============================================================
+node_modules/
+dist/
+build/
+out/
+coverage/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+target/
+*.log
+
+# ============================================================
+# 4. OS / IDE
+# ============================================================
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp

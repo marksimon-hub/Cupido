@@ -1,0 +1,130 @@
+:root {
+  --pink: #ff4d79;
+  --pink-dark: #e03561;
+  --bg1: #ffe3ec;
+  --bg2: #ffc2d6;
+  --text: #4a1530;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--text);
+  background: linear-gradient(135deg, var(--bg1), var(--bg2));
+  overflow: hidden;
+}
+
+.card {
+  position: relative;
+  z-index: 1;
+  width: min(92vw, 460px);
+  padding: 32px 24px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(224, 53, 97, 0.25);
+}
+
+.step { display: none; }
+.step.active { display: block; animation: pop 0.35s ease; }
+
+@keyframes pop {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.emoji { font-size: 4rem; margin-bottom: 8px; }
+h1 { font-size: 1.9rem; margin: 0 0 28px; }
+h2 { font-size: 1.5rem; margin: 0 0 20px; }
+
+.buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  font: inherit;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 12px 32px;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  color: #fff;
+  transition: transform 0.15s ease;
+}
+.btn:hover { transform: scale(1.06); }
+.btn.yes { background: var(--pink); }
+.btn.yes:hover { background: var(--pink-dark); }
+.btn.no { background: #8a8a99; }
+.btn.secondary { background: #fff; color: var(--pink-dark); border: 2px solid var(--pink); }
+
+/* Once dodging starts the button leaves the layout and roams the viewport. */
+.btn.no.dodging {
+  position: fixed;
+  z-index: 10;
+  transition: left 0.18s ease, top 0.18s ease;
+}
+.btn.no.dodging:hover { transform: none; }
+
+.options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.option {
+  font: inherit;
+  font-size: 2.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 16px 8px;
+  background: #fff;
+  border: 2px solid transparent;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.option span { font-size: 1rem; font-weight: 600; color: var(--text); }
+.option:hover, .option:focus-visible { transform: translateY(-4px); border-color: var(--pink); }
+
+form { display: grid; gap: 16px; }
+label { display: grid; gap: 6px; text-align: left; font-weight: 600; }
+input {
+  font: inherit;
+  padding: 10px 12px;
+  border: 2px solid var(--bg2);
+  border-radius: 12px;
+  color: var(--text);
+}
+input:focus { outline: none; border-color: var(--pink); }
+
+.summary { font-size: 1.2rem; font-weight: 600; margin: 0 0 24px; }
+.status { min-height: 1.2em; margin: 12px 0 0; font-size: 0.9rem; }
+
+.hearts { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+.heart {
+  position: absolute;
+  bottom: -40px;
+  opacity: 0.6;
+  animation: float linear forwards;
+}
+@keyframes float {
+  to { transform: translateY(-110vh) rotate(25deg); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .step.active, .heart { animation: none; }
+  .hearts { display: none; }
+  .btn.no.dodging { transition: none; }
+}

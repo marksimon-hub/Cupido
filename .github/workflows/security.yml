@@ -1,0 +1,44 @@
+name: security
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+# Cancel an in-progress run when a newer commit is pushed to the same branch/PR.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  secrets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      # Pinned to a commit SHA (tags can be moved); Dependabot keeps it updated.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      # Runs the gitleaks container directly (no license needed, unlike gitleaks-action for org repos).
+      # Dependabot does not update this image: bump it together with .pre-commit-config.yaml.
+      - name: gitleaks
+        run: docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:v8.30.1 git /repo --redact --verbose
+
+  dependencies:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      # Add audits for other lockfiles (pyproject.toml, yarn.lock, pnpm-lock.yaml) once the stack is chosen.
+      - name: npm audit
+        if: hashFiles('package-lock.json') != ''
+        run: npm audit --audit-level=high
+      - name: pip-audit
+        if: hashFiles('requirements.txt') != ''
+        run: pipx run pip-audit -r requirements.txt

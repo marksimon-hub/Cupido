@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cupido</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="hearts" aria-hidden="true"></div>
+
+    <main class="card">
+      <section id="step-ask" class="step active">
+        <div class="emoji">💘</div>
+        <h1>Would you like to go out with me?</h1>
+        <div class="buttons" id="ask-buttons">
+          <button id="yes" class="btn yes" type="button">Yes</button>
+          <button id="no" class="btn no" type="button">No</button>
+        </div>
+      </section>
+
+      <section id="step-activity" class="step">
+        <div class="emoji">🥰</div>
+        <h2>Yay! What would you like to do?</h2>
+        <div class="options">
+          <button class="option" type="button" data-activity="Dinner">🍝<span>Dinner</span></button>
+          <button class="option" type="button" data-activity="Cinema">🎬<span>Cinema</span></button>
+          <button class="option" type="button" data-activity="Cafe">☕<span>Cafe</span></button>
+        </div>
+      </section>
+
+      <section id="step-when" class="step">
+        <div class="emoji" id="when-emoji">📅</div>
+        <h2>When works for you?</h2>
+        <form id="when-form">
+          <label>Date <input id="date" type="date" required /></label>
+          <label>Time <input id="time" type="time" required /></label>
+          <button class="btn yes" type="submit">Confirm</button>
+        </form>
+      </section>
+
+      <section id="step-done" class="step">
+        <div class="emoji">🎉</div>
+        <h2>It's a date!</h2>
+        <p id="summary" class="summary"></p>
+        <div class="buttons">
+          <button id="ics" class="btn yes" type="button">Add to calendar</button>
+          <button id="copy" class="btn secondary" type="button">Copy message</button>
+        </div>
+        <p id="copy-status" class="status" role="status"></p>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

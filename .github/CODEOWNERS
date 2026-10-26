@@ -1,0 +1,6 @@
+# Changes to these paths need review from the owner, so security rules can't be weakened silently.
+/.claude/                  @marksimon-hub
+/AGENTS.md                 @marksimon-hub
+/.github/                  @marksimon-hub
+/.pre-commit-config.yaml   @marksimon-hub
+/.gitignore                @marksimon-hub
